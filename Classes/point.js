@@ -25,4 +25,23 @@ class Point {
     get shape() {
         return [...this.pos, ...this.size];
     }
+
+    // Operations
+
+    dist(p) {
+        let delta = this.minus(p);
+        return Math.sqrt(delta.x * delta.x + delta.y * delta.y);
+    }
+
+    plus(p) {
+        return new Point(this.x + p.x, this.y + p.y);
+    }
+
+    minus(p) {
+        return this.plus(p.times(-1))
+    }
+
+    times(n) {
+        return new Point(this.x * n, this.y * n);
+    }
 }

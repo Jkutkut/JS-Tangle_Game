@@ -1,6 +1,6 @@
 var mainCanvasWidth, mainCanvasHeight;
 
-var N = 10;
+var N = 15;
 var net;
 
 function setup() {
@@ -28,7 +28,7 @@ function draw() {
 
     for (let i = 0; i < net.size; i++) {
         for (let j = i + 1; j < net.size; j++) {
-            if (net.lines[i][j] == 0) {
+            if (net.lines[i][j] == 1) {
                 line(...net.points[i].pos, ...net.points[j].pos);
             }
         }

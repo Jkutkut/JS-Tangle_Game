@@ -46,6 +46,18 @@ class Net {
         }
 
         this._lines = matrix.make.zero(this.size, this.size);
+
+        for (let i = 0; i < this.size; i++) {
+            for (let j = 0; j < this.size; j++) {
+                if (i == j) continue
+
+                if (this.points[i].dist(this.points[j]) < 1.5 * cellSize[0]) {
+                    this.lines[i][j] = 1;
+                    this.lines[j][i] = 1;
+                }
+            }
+        }
+            
     }
 
     // GETTERS
