@@ -10,7 +10,7 @@ function setup() {
     createCanvas(mainCanvasWidth, mainCanvasHeight);
     frameRate(8);
 
-    net = new Net(N);
+    net = new Net(N, mainCanvasWidth, mainCanvasHeight);
 }
 
 
