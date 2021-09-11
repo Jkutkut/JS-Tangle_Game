@@ -1,11 +1,16 @@
+var mainCanvasWidth, mainCanvasHeight;
+
 var N = 20;
-var points = new Set();
+var net;
 
 function setup() {
-    createCanvas(500, 500);
+    mainCanvasWidth = (mainCanvasWidth)? mainCanvasWidth : windowWidth;
+    mainCanvasHeight = (mainCanvasHeight)? mainCanvasHeight : Math.min(mainCanvasWidth, windowHeight);
+
+    createCanvas(mainCanvasWidth, mainCanvasHeight);
     frameRate(8);
 
-    points.add(new Point(250, 250));
+    net = new Net(N);
 }
 
 
@@ -15,11 +20,8 @@ function draw() {
     fill(0);
     stroke(0)
 
-    for (p of points) {    
+    for (p of net.points) {    
         ellipse(...p.shape);
-        // print(p.shape)
-        // ellipse(...p.pos, p.size);
-        // print(p)
     }
 }
 
