@@ -1,6 +1,6 @@
 var mainCanvasWidth, mainCanvasHeight;
 
-var N = 20;
+var N = 10;
 var net;
 
 function setup() {
@@ -11,6 +11,8 @@ function setup() {
     frameRate(8);
 
     net = new Net(N, mainCanvasWidth, mainCanvasHeight);
+    
+    noLoop();
 }
 
 
@@ -22,6 +24,14 @@ function draw() {
 
     for (p of net.points) {    
         ellipse(...p.shape);
+    }
+
+    for (let i = 0; i < net.size; i++) {
+        for (let j = i + 1; j < net.size; j++) {
+            if (net.lines[i][j] == 0) {
+                line(...net.points[i].pos, ...net.points[j].pos);
+            }
+        }
     }
 }
 
