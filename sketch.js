@@ -22,22 +22,22 @@ function draw() {
     fill(0);
     stroke(0)
 
-    for (p of net.points) {    
-        ellipse(...p.shape);
-    }
-    if (pointDragged != null) {
-        // push();
-        fill(255, 0, 0);
-        ellipse(...pointDragged.shape);
-        // pop();
-    }
-
+    // Draw line
     for (let i = 0; i < net.size; i++) {
         for (let j = i + 1; j < net.size; j++) {
             if (net.lines[i][j] == 1) {
                 line(...net.points[i].pos, ...net.points[j].pos);
             }
         }
+    }
+
+    // Draw points
+    for (p of net.points) {    
+        ellipse(...p.shape);
+    }
+    if (pointDragged != null) {
+        fill(0, 120, 255);
+        ellipse(...pointDragged.shape);
     }
 }
 
