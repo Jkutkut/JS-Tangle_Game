@@ -7,7 +7,8 @@ class Net {
 
         this._size = size;
         
-        this._points = new Set();
+        this._points = [];
+        this._lines = [];
 
         this.createNewNet();
     }
@@ -19,7 +20,7 @@ class Net {
         if (this.size > this.grid * this.grid) {
             console.error("The size of the net is too great.")
         }
-        this.points.clear()
+        this.points.length = 0;
 
         let startPos = this.screenSize.map(x => x * this.offset);
         let cellSize = this.screenSize.map(x => x * (1 - this.offset * 2) / this.grid);
@@ -39,10 +40,12 @@ class Net {
             }
             
             if (!found) {
-                this._points.add(new Point(...coord));
+                this._points.push(new Point(...coord));
                 i++;
             }
         }
+
+        this._lines = matrix.make.zero(this.size, this.size);
     }
 
     // GETTERS
@@ -52,5 +55,14 @@ class Net {
 
     get points() {
         return this._points;
+    }
+
+    get lines() {
+        return this._lines;
+    }
+
+    // SETTERS
+    updateLines() {
+
     }
 }
