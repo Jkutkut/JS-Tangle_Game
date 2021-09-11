@@ -1,10 +1,12 @@
 class Point {
-    radius = 20;
+    static radius = 20;
 
     constructor(x, y) {
         this._x = x;
         this._y = y;
     }
+
+    // GETTERS
 
     get pos() {
         return [this.x, this.y];
@@ -19,12 +21,20 @@ class Point {
     }
 
     get size() {
-        return [this.radius, this.radius];
+        return [Point.radius, Point.radius];
     }
 
     get shape() {
         return [...this.pos, ...this.size];
     }
+
+    // SETTERS
+
+    moveTo(x, y) {
+        this._x = x;
+        this._y = y;
+    }
+
 
     // Operations
 

@@ -8,7 +8,7 @@ function setup() {
     mainCanvasHeight = (mainCanvasHeight)? mainCanvasHeight : Math.min(mainCanvasWidth, windowHeight);
 
     createCanvas(mainCanvasWidth, mainCanvasHeight);
-    frameRate(8);
+    frameRate(30);
 
     net = new Net(N, mainCanvasWidth, mainCanvasHeight);
     
@@ -25,6 +25,12 @@ function draw() {
     for (p of net.points) {    
         ellipse(...p.shape);
     }
+    if (pointDragged != null) {
+        // push();
+        fill(255, 0, 0);
+        ellipse(...pointDragged.shape);
+        // pop();
+    }
 
     for (let i = 0; i < net.size; i++) {
         for (let j = i + 1; j < net.size; j++) {
@@ -36,4 +42,30 @@ function draw() {
 }
 
 function keyPressed() {
+}
+
+
+pointDragged = null;
+
+function mousePressed() {
+    let mouse = new Point(mouseX, mouseY);
+    for (let i = 0; i < net.points.length; i++) {
+        if (mouse.dist(net.points[i]) < Point.radius) {
+            pointDragged = net.points[i];
+            loop();
+            return;
+        }
+    }
+    pointDragged = null;
+}
+  
+function mouseDragged() {
+    if (pointDragged != null) {
+        pointDragged.moveTo(mouseX, mouseY);
+    }
+}
+  
+function mouseReleased() {
+    pointDragged = null;
+    noLoop();
 }
