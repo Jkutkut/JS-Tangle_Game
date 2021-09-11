@@ -1,0 +1,9 @@
+:root {
+    --background: rgb(110, 110, 110);
+}
+
+body {
+    background: var(--background);
+
+    font-family: Merriweather;
+}
