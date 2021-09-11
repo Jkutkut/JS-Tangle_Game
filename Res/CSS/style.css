@@ -6,4 +6,6 @@ body {
     background: var(--background);
 
     font-family: Merriweather;
+
+    margin: 0;
 }
