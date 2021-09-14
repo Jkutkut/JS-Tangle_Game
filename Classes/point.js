@@ -40,7 +40,15 @@ class Point {
 
     dist(p) {
         let delta = this.minus(p);
-        return Math.sqrt(delta.x * delta.x + delta.y * delta.y);
+        return delta.mag();
+    }
+
+    mag() {
+        return Point.mag(this.x, this.y);
+    }
+
+    static mag(x, y) {
+        return Math.sqrt(x * x + y * y);
     }
 
     plus(p) {
