@@ -29,37 +29,80 @@ class Net {
         let cellSize = this.screenSize.map(x => x * (1 - this.offset * 2) / this.grid);
 
         let randomChance = () => {
-            return Math.random() < (this.size - this.points.length) / this.size * 1.1;
+            return Math.random() < (this.size - this.points.length) / this.size;
         };
-        let siguientes = [
-            (x, y) => {
-                if (y + 1 < this.grid && randomChance()) {
-                    sigueDesde(x, y + 1);
-                }
-            },
-            (x, y) => {
-                if (x + 1 < this.grid && randomChance()) {
-                    sigueDesde(x + 1, y);
-                }
-            }
-        ];
-        let sigueDesde = (x, y) => {
+        let addPoint = (x, y) => {
             this.points.push(new Point(startPos[0] + x * cellSize[0], startPos[1] + y * cellSize[1]));
-            
-            if (Math.random() < 0.5) {
-                siguientes[0](x, y);
-                siguientes[1](x, y);
+        };
+        let sigueDesde = (x, y) => {
+            let currentIndex = this.points.length; // Is going to increment the real length in the next action
+            addPoint(x, y);
+
+            // add neighbors
+            let startX = (x > 0)? -1 : 0;
+            let endX = (x + 1 < this.grid) ? 1 : 0;
+            let startY = (y > 0)? -1 : 0;
+            let endY = (y + 1 < this.grid)? 1 : 0;
+
+            for (let i = startX; i <= endX; i++) {
+                for (let j = startY; j <= endY; j++) {
+                    if (i == j) continue;
+
+                    if (randomChance()) {
+                        addPoint(x + i, y + j);
+                    }
+                }
             }
-            else {
-                siguientes[1](x, y);
-                siguientes[0](x, y);
+
+            let maxDist = Point.mag(...cellSize);
+            for (let i = currentIndex; i < this.points.length; i++) {
+                let p1 = this.points[i];
+                for (let j = i + 1; j < this.points.length; j++) {
+                    let p2 = this.points[j];
+                    
+                    // console.log(`${p1.dist(p2)} vs ${maxDist} => ${p1.dist(p2) < maxDist}`);
+                    if (p1.dist(p2) < maxDist) {
+                        this.lines.push([p1, p2]);
+                    }
+                }
             }
         };
 
-        // while (this.points.length < this.size) {
-        sigueDesde(0, 0);
+        let center = this.grid >> 1;
+        sigueDesde(center, center);
 
-        console.log(`Faltan ${this.size - this.points.length} points`)
+
+        console.log(`Faltan ${this.size - this.points.length}/${this.size}`);
+
+
+        // let siguientes = [
+        //     (x, y) => {
+        //         if (y + 1 < this.grid && randomChance()) {
+        //             sigueDesde(x, y + 1);
+        //         }
+        //     },
+        //     (x, y) => {
+        //         if (x + 1 < this.grid && randomChance()) {
+        //             sigueDesde(x + 1, y);
+        //         }
+        //     }
+        // ];
+        // let sigueDesde = (x, y) => {
+        //     this.points.push(new Point(startPos[0] + x * cellSize[0], startPos[1] + y * cellSize[1]));
+            
+        //     if (Math.random() < 0.5) {
+        //         siguientes[0](x, y);
+        //         siguientes[1](x, y);
+        //     }
+        //     else {
+        //         siguientes[1](x, y);
+        //         siguientes[0](x, y);
+        //     }
+        // };
+
+        // // while (this.points.length < this.size) {
+        // sigueDesde(0, 0);
+
         //     attempts--; if (attempts == 0) break;
         // }
 
