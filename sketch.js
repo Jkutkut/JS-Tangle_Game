@@ -35,8 +35,11 @@ function draw() {
     }
 
     // Draw points
-    for (p of net.points) {    
-        ellipse(...p.shape);
+    // for (p of net.points) {    
+    //     ellipse(...p.shape);
+    // }
+    for (let i = 0; i < net.points.length; i++) {
+        ellipse(...net.points[i].shape);
     }
     if (pointDragged != null) {
         fill(0, 120, 255);
