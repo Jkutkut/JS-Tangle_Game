@@ -34,26 +34,33 @@ class Net {
         let addPoint = (x, y) => {
             this.points.push(new Point(startPos[0] + x * cellSize[0], startPos[1] + y * cellSize[1]));
         };
-        let sigueDesde = (x, y) => {
+        let getDepth = (x, y) => {
+            return Math.max(Math.abs(center - x), Math.abs(center - y));
+        };
+        let sigueDesde = (x, y, depth=1) => {
             let currentIndex = this.points.length; // Is going to increment the real length in the next action
             addPoint(x, y);
 
             // add neighbors
+
+            // Get the min and max values in horizontal and vertical axis
             let startX = (x > 0)? -1 : 0;
             let endX = (x + 1 < this.grid) ? 1 : 0;
             let startY = (y > 0)? -1 : 0;
             let endY = (y + 1 < this.grid)? 1 : 0;
 
-            for (let i = startX; i <= endX; i++) {
+            for (let i = startX; i <= endX; i++) { // For each
                 for (let j = startY; j <= endY; j++) {
                     if (i == j) continue;
 
-                    if (randomChance()) {
+                    // If coordinates on valid position and valid to place a point
+                    if (getDepth(x + i, y + j) == depth && randomChance()) {
                         addPoint(x + i, y + j);
                     }
                 }
             }
 
+            // Create the lines
             let maxDist = Point.mag(...cellSize);
             for (let i = currentIndex; i < this.points.length; i++) {
                 let p1 = this.points[i];
@@ -65,6 +72,11 @@ class Net {
                         this.lines.push([p1, p2]);
                     }
                 }
+            }
+
+            for (let i = currentIndex + 1; i < this.points.length; i++) {
+                
+                // sigueDesde()
             }
         };
 
