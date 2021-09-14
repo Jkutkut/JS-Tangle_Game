@@ -23,12 +23,15 @@ function draw() {
     stroke(0)
 
     // Draw line
-    for (let i = 0; i < net.size; i++) {
-        for (let j = i + 1; j < net.size; j++) {
-            if (net.lines[i][j] == 1) {
-                line(...net.points[i].pos, ...net.points[j].pos);
-            }
-        }
+    // for (let i = 0; i < net.size; i++) {
+    //     for (let j = i + 1; j < net.size; j++) {
+    //         if (net.lines[i][j] == 1) {
+    //             line(...net.points[i].pos, ...net.points[j].pos);
+    //         }
+    //     }
+    // }
+    for (let i = 0; i < net.lines.length; i++) {
+        line(...net.lines[i][0].pos, ...net.lines[i][1].pos)
     }
 
     // Draw points
