@@ -1,20 +1,87 @@
 class Net {
     offset = 0.1;
-    grid = 5;
+    grid = 4;
 
     constructor(size, width, height) {
         this.screenSize = [width, height];
 
-        this._size = size;
+        this._size = size; // TODO Useless at the moment
         
         this._points = [];
         this._lines = [];
 
-        this.createNewNet();
+        this.createNet();
+    }
+
+
+    /**
+     * This method inits the set of points.
+     */
+    createNet() {
+        if (this.size > this.grid * this.grid) {
+            console.error("The size of the net is too great.")
+        }
+
+        // Reset variables
+        this.points.length = 0;
+        this.lines.length = 0;
+
+        let startPos = this.screenSize.map(x => x * this.offset);
+        let cellSize = this.screenSize.map(x => x * (1 - this.offset * 2) / (this.grid - 1));
+
+        // points
+        for (let i = 0; i < this.grid; i++) {
+            for (let j = i; j < this.grid; j++) {
+                let x = startPos[0] + i * cellSize[0];
+                let y = startPos[1] + j * cellSize[1];
+                this.points.push(new Point(x, y));
+            }
+        }
+
+        // lines
+        for (let j = 0, now = this.grid; j < this.points.length;) {
+            let extra = 0;
+            for (let i = 1; i < now; i++) {
+                this.lines.push([this.points[j], this.points[i + j]]);
+                extra++;
+            }
+            now--;
+            j += extra + 1;
+        }
+
+        let extra = [
+            // horizontal
+
+            [1, 4],
+            [2, 5],
+            [3, 6],
+
+            [5, 7],
+            [6, 8],
+
+            [8, 9],
+
+            // diagonals
+
+            [0, 4],
+            [1, 5],
+            [2, 6],
+
+            [4, 7],
+            [5, 8],
+
+            [7, 9]
+        ];
+        for (let q of extra) {
+            this.lines.push([this.points[q[0]], this.points[q[1]]])
+        }
+
     }
 
     /**
-     * This method inits the set of points
+     * This method inits the set of points.
+     * 
+     * @deprecated
      */
     createNewNet() {
         if (this.size > this.grid * this.grid) {
