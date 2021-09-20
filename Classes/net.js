@@ -4,6 +4,8 @@ class Net {
 
     constructor(size, width, height) {
         this.screenSize = [width, height];
+        this.startPos = this.screenSize.map(x => x * this.offset);
+        this.cellSize = this.screenSize.map(x => x * (1 - this.offset * 2) / (this.grid - 1));
 
         this._size = size; // TODO Useless at the moment
         
@@ -11,11 +13,12 @@ class Net {
         this._lines = [];
 
         this.createNet();
+        this.tangleNet();
     }
 
 
     /**
-     * This method inits the set of points.
+     * Creates the points and the lines
      */
     createNet() {
         if (this.size > this.grid * this.grid) {
@@ -26,14 +29,13 @@ class Net {
         this.points.length = 0;
         this.lines.length = 0;
 
-        let startPos = this.screenSize.map(x => x * this.offset);
-        let cellSize = this.screenSize.map(x => x * (1 - this.offset * 2) / (this.grid - 1));
+        
 
         // points
         for (let i = 0; i < this.grid; i++) {
             for (let j = i; j < this.grid; j++) {
-                let x = startPos[0] + i * cellSize[0];
-                let y = startPos[1] + j * cellSize[1];
+                let x = this.startPos[0] + i * this.cellSize[0];
+                let y = this.startPos[1] + j * this.cellSize[1];
                 this.points.push(new Point(x, y));
             }
         }
@@ -75,7 +77,6 @@ class Net {
         for (let q of extra) {
             this.lines.push([this.points[q[0]], this.points[q[1]]])
         }
-
     }
 
     /**
@@ -316,6 +317,33 @@ class Net {
     // SETTERS
 
     // Tangle logic
+
+    /**
+     * Shuffles the current net, placing all the points forming a circle.
+     */
+    tangleNet() {
+        let center = this.screenSize[0] >> 1;
+        let r = center - this.startPos[0];
+
+        let dTheta = Math.PI * 2 / this.points.length;
+
+        let indices = [];
+        for (let i = 0; i < this.points.length; i++) {
+            indices.push(i);
+        }
+
+        let i = 0;
+        while(indices.length > 0) {
+            let ind = (Math.random() * indices.length) >> 0;
+            let index = indices.splice(ind, 1)[0];
+            
+            let x = r * Math.cos(dTheta * i) + center;
+            let y = r * Math.sin(dTheta * i) + center;
+
+            this.points[index].moveTo(x, y);
+            i++;
+        }
+    }
 
     isValid() {
         // TODO Optimice code (now O(N^2))
