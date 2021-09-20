@@ -332,23 +332,23 @@ class Net {
 
                 let c = SegmentCollision.intersection(...p1, ...p2, ...p3, ...p4);
                 if (c != false) {
-                    let collisionPoint = new Point(c.x, c.y);
-                    console.log(c);
+                    // let collisionPoint = new Point(c.x, c.y);
+                    // console.log(c);
 
-                    console.log([l, l2]);
+                    // console.log([l, l2]);
                     
-                    // * debug draw
-                    push();
-                    fill(255,0,0);
-                    stroke(255,0,0);
+                    // // * debug draw
+                    // push();
+                    // fill(255,0,0);
+                    // stroke(255,0,0);
                     
-                    // point
-                    ellipse(...collisionPoint.shape);
+                    // // point
+                    // ellipse(...collisionPoint.shape);
 
-                    // lines
-                    line(...l[0].pos, ...l[1].pos);
-                    line(...l2[0].pos, ...l2[1].pos);
-                    pop();
+                    // // lines
+                    // line(...l[0].pos, ...l[1].pos);
+                    // line(...l2[0].pos, ...l2[1].pos);
+                    // pop();
                     return false;
                 }
             }

@@ -11,6 +11,10 @@ function setup() {
     frameRate(30);
 
     net = new Net(N, mainCanvasWidth, mainCanvasHeight);
+
+
+    fill(0);
+    stroke(0);
     
     noLoop();
 }
@@ -18,9 +22,6 @@ function setup() {
 
 function draw() {
     background(255);
-
-    fill(0);
-    stroke(0)
 
     // Draw line
     // for (let i = 0; i < net.size; i++) {
@@ -42,8 +43,10 @@ function draw() {
         ellipse(...net.points[i].shape);
     }
     if (pointDragged != null) {
+        push();
         fill(0, 120, 255);
         ellipse(...pointDragged.shape);
+        pop();
     }
 }
 
@@ -73,5 +76,12 @@ function mouseDragged() {
   
 function mouseReleased() {
     pointDragged = null;
+
+    if (net.isValid()) {
+        fill(0, 255, 70);
+    }
+    else {
+        fill(0);
+    }
     noLoop();
 }
