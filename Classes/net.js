@@ -314,7 +314,46 @@ class Net {
     }
 
     // SETTERS
-    updateLines() {
 
+    // Tangle logic
+
+    isValid() {
+        // TODO Optimice code (now O(N^2))
+
+        for (let i = 0; i < this.lines.length; i++) {
+            let l = this.lines[i];
+            let p1 = l[0].pos;
+            let p2 = l[1].pos;
+
+            for (let j = i + 1; j < this.lines.length; j++) {
+                let l2 = this.lines[j];
+                let p3 = l2[0].pos;
+                let p4 = l2[1].pos;
+
+                let c = SegmentCollision.intersection(...p1, ...p2, ...p3, ...p4);
+                if (c != false) {
+                    let collisionPoint = new Point(c.x, c.y);
+                    console.log(c);
+
+                    console.log([l, l2]);
+                    
+                    // * debug draw
+                    push();
+                    fill(255,0,0);
+                    stroke(255,0,0);
+                    
+                    // point
+                    ellipse(...collisionPoint.shape);
+
+                    // lines
+                    line(...l[0].pos, ...l[1].pos);
+                    line(...l2[0].pos, ...l2[1].pos);
+                    pop();
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 }
