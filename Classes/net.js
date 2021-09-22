@@ -5,7 +5,7 @@ class Net {
         this.screenSize = new Point(width, height);
         this.startPos = this.screenSize.times(this.offset);
         
-        this._size = size; // TODO Useless at the moment
+        this._size = size;
         this.spacing = (this.screenSize.w / this.size * 2) >> 0;
 
         
@@ -45,7 +45,7 @@ class Net {
             const ATTEMPTS = 1000;
             let attempt;
 
-            while(this.points.length < this.size) {
+            while(this.points.length < this.size) { // Create the points
                 attempt = 0;
                 this.points.length = 0;
 
@@ -63,14 +63,14 @@ class Net {
                 }
             }        
 
-            for (let i = 0; i < this.points.length; i++) {
+            for (let i = 0; i < this.size; i++) {
                 let p1 = this.points[i];
                 const MAX = (Math.random() * 2 >> 0) + 2;
 
 
                 let closePoints = []; // This array will have the length = max
                 closePoints.length = MAX;
-                for (let j = 0; j < this.points.length; j++) {
+                for (let j = 0; j < this.size; j++) {
                     if (i == j) continue;
 
                     let p2 = this.points[j];
