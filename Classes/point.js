@@ -71,6 +71,7 @@ class Point {
             return true;
         }
 
-        throw new Error(`The given argument is not a point!\n${p}`);
+        console.error(`Error with the given point!\n`, p, "\nIt is not a point!\n");
+        throw new Error(`The given argument is not a point!`);
     }
 }
