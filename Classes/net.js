@@ -1,19 +1,19 @@
 class Net {
     offset = 0.1;
-    grid = 5;
 
     constructor(size, width, height) {
         this.screenSize = new Point(width, height);
         this.startPos = this.screenSize.times(this.offset);
-        this.cellSize = this.screenSize.times((1 - this.offset * 2) / (this.grid - 1));
-
+        
         this._size = size; // TODO Useless at the moment
+        this.spacing = (this.screenSize.w / this.size * 2) >> 0;
+
         
         this._points = [];
         this._lines = [];
 
         this.createNet();
-        // this.tangleNet();
+        this.tangleNet();
     }
 
 
@@ -21,9 +21,6 @@ class Net {
      * Creates the points and the lines.
      */
     createNet() {
-        if (this.size > this.grid * this.grid) {
-            console.error("The size of the net is too great.")
-        }
         do { // TODO Find a more efficient method to create the network
             // Reset variables
             this.points.length = 0;
@@ -44,7 +41,7 @@ class Net {
                 );
             }
 
-            let space = this.cellSize.x;
+            // let space = this.cellSize.x;
             const ATTEMPTS = 1000;
             let attempt;
 
@@ -56,7 +53,7 @@ class Net {
                     let newPoint = randomPoint();
                     let valid = true;
                     for (let i = 0; i < this.points.length; i++) {
-                        if (newPoint.dist(this.points[i]) < space) {
+                        if (newPoint.dist(this.points[i]) < this.spacing) {
                             valid = false;
                         }
                     }
@@ -127,13 +124,13 @@ class Net {
      * Shuffles the current net, placing all the points forming a circle.
      */
     tangleNet() {
-        let center = this.screenSize[0] >> 1;
-        let r = center - this.startPos[0];
+        let center = this.screenSize.x >> 1
+        let r = center - this.startPos.x;
 
-        let dTheta = Math.PI * 2 / this.points.length;
+        let dTheta = Math.PI * 2 / this.size;
 
         let indices = [];
-        for (let i = 0; i < this.points.length; i++) {
+        for (let i = 0; i < this.size; i++) {
             indices.push(i);
         }
 
