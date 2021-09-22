@@ -130,7 +130,45 @@ class Net {
         }
 
         console.log(`Faltan ${this.size - this.points.length}/${this.size}`);
-            
+        
+
+        for (let i = 0; i < this.points.length; i++) {
+            let p1 = this.points[i];
+            const MAX = (Math.random() * 2 >> 0) + 2;
+
+
+            let closePoints = []; // This array will have the length = max
+            closePoints.length = MAX;
+            for (let j = 0; j < this.points.length; j++) {
+                if (i == j) continue;
+
+                let p2 = this.points[j];
+                let dist = p1.dist(p2);
+
+                for (let k = 0; k < closePoints.length; k++) { // Attempt to insert p2 into the array
+                    if (!closePoints[k] || closePoints[k].dist > dist) {
+                        closePoints.splice(k, 0, {point: p2, dist: dist});
+                        closePoints.length = MAX;
+                        break;
+                    }
+                }
+            }
+
+            for (let k = 0; k < closePoints.length; k++) {
+                let alreadyMade = false;
+                for (let q = 0; q < this.lines.length; q++) {// Check not already in
+                    if (this.lines[q][0] == closePoints[k].point && this.lines[q][1] == p1) {
+                        alreadyMade = true;
+                        break;
+                    }
+                }
+
+                if (!alreadyMade) {
+                    if (!closePoints[k]) break;
+                    this.lines.push([p1, closePoints[k].point]);
+                }
+            }
+        }
     }
 
     // GETTERS
