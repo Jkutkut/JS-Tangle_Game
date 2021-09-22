@@ -23,22 +23,12 @@ function setup() {
 function draw() {
     background(255);
 
-    // Draw line
-    // for (let i = 0; i < net.size; i++) {
-    //     for (let j = i + 1; j < net.size; j++) {
-    //         if (net.lines[i][j] == 1) {
-    //             line(...net.points[i].pos, ...net.points[j].pos);
-    //         }
-    //     }
-    // }
+    // Draw lines
     for (let i = 0; i < net.lines.length; i++) {
         line(...net.lines[i][0].pos, ...net.lines[i][1].pos)
     }
 
     // Draw points
-    // for (p of net.points) {    
-    //     ellipse(...p.shape);
-    // }
     for (let i = 0; i < net.points.length; i++) {
         ellipse(...net.points[i].shape);
     }
@@ -77,11 +67,15 @@ function mouseDragged() {
 function mouseReleased() {
     pointDragged = null;
 
+    checkIsValid();
+    noLoop();
+}
+
+function checkIsValid() {
     if (net.isValid()) {
         fill(0, 255, 70);
     }
     else {
         fill(0);
     }
-    noLoop();
 }
