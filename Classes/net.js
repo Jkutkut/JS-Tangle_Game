@@ -35,7 +35,7 @@ class Net {
              * @returns a random point inside the screen
              */
             let randomPoint = () => {
-                return new Point(
+                return new PointNode(
                     Math.random() * availableSpace.x + this.startPos.y, 
                     Math.random() * availableSpace.x + this.startPos.y
                 );
@@ -95,8 +95,9 @@ class Net {
                     }
 
                     if (!alreadyMade) {
-                        if (!closePoints[k]) break;
                         this.lines.push([p1, closePoints[k].point]);
+                        p1.addConnection(closePoints[k].point);
+                        closePoints[k].point.addConnection(p1);
                     }
                 }
             }
