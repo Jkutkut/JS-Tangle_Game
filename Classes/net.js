@@ -6,14 +6,15 @@ class Net {
         this.startPos = this.screenSize.times(this.offset);
         
         this._size = size;
-        this.spacing = (this.screenSize.w / this.size * 2) >> 0;
+        this.spacing = (this.screenSize.x / this.size * 2) >> 0;
+        print(this.spacing)
 
         
         this._points = [];
         this._lines = [];
 
         this.createNet();
-        this.tangleNet();
+        // this.tangleNet();
     }
 
 
@@ -55,6 +56,7 @@ class Net {
                     for (let i = 0; i < this.points.length; i++) {
                         if (newPoint.dist(this.points[i]) < this.spacing) {
                             valid = false;
+                            break;
                         }
                     }
                     if (valid) {
@@ -101,7 +103,7 @@ class Net {
                     }
                 }
             }
-        } while(!this.isValid());
+        } while(!this.isValid() || !this.isFullyConnected());
     }
 
     // GETTERS
