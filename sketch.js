@@ -49,7 +49,7 @@ pointDragged = null;
 function mousePressed() {
     let mouse = new Point(mouseX, mouseY);
     for (let i = 0; i < net.points.length; i++) {
-        if (mouse.dist(net.points[i]) < Point.radius) {
+        if (mouse.dist(net.points[i]) < Point.radius * 1.2) {
             pointDragged = net.points[i];
             loop();
             return;
