@@ -39,6 +39,7 @@ class Point {
     // Operations
 
     dist(p) {
+        this.checkPoint(p);
         let delta = this.minus(p);
         return delta.mag();
     }
@@ -52,14 +53,24 @@ class Point {
     }
 
     plus(p) {
+        this.checkPoint(p);
         return new Point(this.x + p.x, this.y + p.y);
     }
 
     minus(p) {
-        return this.plus(p.times(-1))
+        this.checkPoint(p);
+        return this.plus(p.times(-1));
     }
 
     times(n) {
         return new Point(this.x * n, this.y * n);
+    }
+
+    checkPoint(p) {
+        if (p instanceof Point) {
+            return true;
+        }
+
+        throw new Error(`The given argument is not a point!\n${p}`);
     }
 }
