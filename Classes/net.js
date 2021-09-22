@@ -184,7 +184,37 @@ class Net {
                 }
             }
         }
-
         return true;
+    }
+
+    isFullyConnected() {
+        let queue = new Set();
+        let seen = new Set();
+        let current;
+
+        queue.add(this.points[0]);
+        while (queue.size > 0) {
+            current = queue.entries().next().value[0];
+            queue.delete(current);
+
+            for (let p of current.connections) {
+                if (!seen.has(p)) {
+                    queue.add(p);
+                }
+            }
+            seen.add(current);
+        }
+
+        return seen.size == this.size;
+        // Debug code
+        // console.error(`${this.size - seen.size} nodes missing :(`);
+
+        // for (let p of seen) {
+        //     push()
+        //     fill(255,0,0);
+        //     ellipse(...p.shape);
+        //     pop();
+        // }
+        return false;
     }
 }
