@@ -12,7 +12,7 @@ class Net {
         this._points = [];
         this._lines = [];
 
-        this.createNewNet();
+        this.createNet();
         // this.tangleNet();
     }
 
@@ -24,151 +24,86 @@ class Net {
         if (this.size > this.grid * this.grid) {
             console.error("The size of the net is too great.")
         }
-
-        // Reset variables
-        this.points.length = 0;
-        this.lines.length = 0;
-
-        
-
-        // points
-        for (let i = 0; i < this.grid; i++) {
-            for (let j = i; j < this.grid; j++) {
-                let x = this.startPos.x + i * this.cellSize.x;
-                let y = this.startPos.y + j * this.cellSize.y;
-                this.points.push(new Point(x, y));
-            }
-        }
-
-        // lines
-        for (let j = 0, now = this.grid; j < this.points.length;) {
-            let extra = 0;
-            for (let i = 1; i < now; i++) {
-                this.lines.push([this.points[j], this.points[i + j]]);
-                extra++;
-            }
-            now--;
-            j += extra + 1;
-        }
-
-        let extra = [
-            // horizontal
-
-            [1, 4],
-            [2, 5],
-            [3, 6],
-
-            [5, 7],
-            [6, 8],
-
-            [8, 9],
-
-            // diagonals
-
-            [0, 4],
-            [1, 5],
-            [2, 6],
-
-            [4, 7],
-            [5, 8],
-
-            [7, 9]
-        ];
-        for (let q of extra) {
-            this.lines.push([this.points[q[0]], this.points[q[1]]])
-        }
-    }
-
-    /**
-     * Creates the points and the lines.
-     */
-    createNewNet() {
-        if (this.size > this.grid * this.grid) {
-            console.error("The size of the net is too great.")
-        }
-
-        // Reset variables
-        this.points.length = 0;
-        this.lines.length = 0;
-
-
-        let availableSpace = new Point(
-            this.screenSize.x - 2 * this.startPos.x,
-            this.screenSize.y - 2 * this.startPos.y
-        );
-        /**
-         * @returns a random point inside the screen
-         */
-        let randomPoint = () => {
-            return new Point(
-                Math.random() * availableSpace.x + this.startPos.y, 
-                Math.random() * availableSpace.x + this.startPos.y
-            );
-        }
-
-
-        let space = this.cellSize.x;
-        const ATTEMPTS = 1000;
-        let attempt;
-
-        while(this.points.length < this.size) {
-            attempt = 0;
+        do { // TODO Find a more efficient method to create the network
+            // Reset variables
             this.points.length = 0;
-
-            while (this.points.length < this.size && attempt++ < ATTEMPTS) {
-                let newPoint = randomPoint();
-                let valid = true;
-                for (let i = 0; i < this.points.length; i++) {
-                    if (newPoint.dist(this.points[i]) < space) {
-                        valid = false;
-                    }
-                }
-                if (valid) {
-                    this.points.push(newPoint);
-                }
-            }
-        }
-
-        console.log(`Faltan ${this.size - this.points.length}/${this.size}`);
-        
-
-        for (let i = 0; i < this.points.length; i++) {
-            let p1 = this.points[i];
-            const MAX = (Math.random() * 2 >> 0) + 2;
+            this.lines.length = 0;
 
 
-            let closePoints = []; // This array will have the length = max
-            closePoints.length = MAX;
-            for (let j = 0; j < this.points.length; j++) {
-                if (i == j) continue;
-
-                let p2 = this.points[j];
-                let dist = p1.dist(p2);
-
-                for (let k = 0; k < closePoints.length; k++) { // Attempt to insert p2 into the array
-                    if (!closePoints[k] || closePoints[k].dist > dist) {
-                        closePoints.splice(k, 0, {point: p2, dist: dist});
-                        closePoints.length = MAX;
-                        break;
-                    }
-                }
+            let availableSpace = new Point(
+                this.screenSize.x - 2 * this.startPos.x,
+                this.screenSize.y - 2 * this.startPos.y
+            );
+            /**
+             * @returns a random point inside the screen
+             */
+            let randomPoint = () => {
+                return new Point(
+                    Math.random() * availableSpace.x + this.startPos.y, 
+                    Math.random() * availableSpace.x + this.startPos.y
+                );
             }
 
-            for (let k = 0; k < closePoints.length; k++) {
-                let alreadyMade = false;
-                for (let q = 0; q < this.lines.length; q++) {// Check not already in
-                    if (this.lines[q][0] == closePoints[k].point && this.lines[q][1] == p1) {
-                        alreadyMade = true;
-                        break;
+            let space = this.cellSize.x;
+            const ATTEMPTS = 1000;
+            let attempt;
+
+            while(this.points.length < this.size) {
+                attempt = 0;
+                this.points.length = 0;
+
+                while (this.points.length < this.size && attempt++ < ATTEMPTS) {
+                    let newPoint = randomPoint();
+                    let valid = true;
+                    for (let i = 0; i < this.points.length; i++) {
+                        if (newPoint.dist(this.points[i]) < space) {
+                            valid = false;
+                        }
+                    }
+                    if (valid) {
+                        this.points.push(newPoint);
+                    }
+                }
+            }        
+
+            for (let i = 0; i < this.points.length; i++) {
+                let p1 = this.points[i];
+                const MAX = (Math.random() * 2 >> 0) + 2;
+
+
+                let closePoints = []; // This array will have the length = max
+                closePoints.length = MAX;
+                for (let j = 0; j < this.points.length; j++) {
+                    if (i == j) continue;
+
+                    let p2 = this.points[j];
+                    let dist = p1.dist(p2);
+
+                    for (let k = 0; k < closePoints.length; k++) { // Attempt to insert p2 into the array
+                        if (!closePoints[k] || closePoints[k].dist > dist) {
+                            closePoints.splice(k, 0, {point: p2, dist: dist});
+                            closePoints.length = MAX;
+                            break;
+                        }
                     }
                 }
 
-                if (!alreadyMade) {
-                    if (!closePoints[k]) break;
-                    this.lines.push([p1, closePoints[k].point]);
+                for (let k = 0; k < closePoints.length; k++) {
+                    let alreadyMade = false;
+                    for (let q = 0; q < this.lines.length; q++) {// Check not already in
+                        if (this.lines[q][0] == closePoints[k].point && this.lines[q][1] == p1) {
+                            alreadyMade = true;
+                            break;
+                        }
+                    }
+
+                    if (!alreadyMade) {
+                        if (!closePoints[k]) break;
+                        this.lines.push([p1, closePoints[k].point]);
+                    }
                 }
             }
-        }
+        } while(!this.isValid());
     }
 
     // GETTERS
