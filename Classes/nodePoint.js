@@ -1,13 +1,17 @@
 class PointNode extends Point {
     constructor(x, y) {
         super(x, y);
-        this.connectedNodes = new Set();
+        this._connectedNodes = new Set();
     }
 
 
     addConnection(p) {
         this.checkPoint(p);
 
-        this.connectedNodes.add(p);
+        this._connectedNodes.add(p);
+    }
+
+    get connections() {
+        return this._connectedNodes;
     }
 }
