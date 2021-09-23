@@ -35,6 +35,16 @@ class Point {
         this._y = y;
     }
 
+    advance(x, y) {
+        this._x += x;
+        this._y += y;
+    }
+
+    advanceWithDirection(p) {
+        this.checkPoint(p);
+        this.advance(p.x, p.y);
+    }
+
 
     // Operations
 
