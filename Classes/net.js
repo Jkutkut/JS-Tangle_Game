@@ -7,8 +7,6 @@ class Net {
         
         this._size = size;
         this.spacing = (this.screenSize.x / this.size * 2) >> 0;
-        print(this.spacing)
-
         
         this._points = [];
         this._lines = [];
@@ -218,5 +216,31 @@ class Net {
         //     pop();
         // }
         return false;
+    }
+
+    /**
+     * This method allows the user to move the points to the original position.
+     */
+    *solveAnimation(steps) {
+        if (this.isValid()) {
+            return;
+        }
+
+        // Get vectors
+        let fraction = 1 / steps;
+        let directions = [];
+        for (let i = 0; i < this.size; i++) {
+            let p = this.points[i];
+            let d = p.initialPos.minus(p).times(fraction);
+
+            directions.push(d);
+        }; 
+
+        for (let i = 0; i < steps; i++) {
+            for (let j = 0; j < this.size; j++) {
+                this.points[j].advanceWithDirection(directions[j]);
+            }
+            yield i;
+        }
     }
 }
