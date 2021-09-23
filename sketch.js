@@ -129,9 +129,13 @@ function mouseReleased() {
     noLoop();
 }
 
+var initialN = N;
 function checkIsValid() {
     if (net.isValid()) {
         fill(0, 255, 70);
+        if (N == initialN) {
+            alert("Niiice! Press space to go to the next level.\n\n(You can see the rest of the controls here:\nhttps://github.com/Jkutkut/JS-Tangle_Game)");
+        }
     }
     else {
         fill(0);
