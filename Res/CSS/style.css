@@ -1,11 +1,28 @@
 :root {
-    --background: rgb(255, 255, 255);
+    --background: rgb(0, 0, 0);
+    /* --background: rgb(255, 255, 255); */
 }
 
-body {
+body, html {
     background: var(--background);
 
     font-family: Merriweather;
 
     margin: 0;
+}
+
+div {
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+    text-align: center;
+}
+
+#msg {
+    left: 0px;
+}
+
+#madeBy {
+    margin-right: 10px;
+    margin-bottom: 10px;
 }
