@@ -1,20 +1,22 @@
-var mainCanvasWidth, mainCanvasHeight;
+var mainCanvasSize;
 
 var N = 5;
-var net, animation;
+var net;
+
+var animation;
+const animationTime = 100;
+const animationFrameRate = 30;
 
 /**
  * Create the canvas and the net.
  */
 function setup() {
-    mainCanvasWidth = (mainCanvasWidth)? mainCanvasWidth : windowWidth;
-    mainCanvasHeight = (mainCanvasHeight)? mainCanvasHeight : Math.min(mainCanvasWidth, windowHeight);
-
-    createCanvas(mainCanvasWidth, mainCanvasHeight);
+    mainCanvasSize = Math.min(windowWidth, windowHeight);
+    
+    createCanvas(mainCanvasSize, mainCanvasSize);
     frameRate(30);
 
-    net = new Net(N, mainCanvasWidth, mainCanvasHeight);
-
+    net = new Net(N, mainCanvasSize, mainCanvasSize);
 
     fill(0);
     stroke(0);
@@ -45,9 +47,14 @@ function draw() {
         pop();
     }
 
-    // if (animation) {
-    //     animation.next()
-    // }
+    if (animation) {
+        if (animation.next().done) {
+            animation = undefined;
+            noLoop();
+            checkIsValid();
+            draw();
+        }
+    }
 }
 
 function keyPressed() {
@@ -57,17 +64,14 @@ function keyPressed() {
         draw()
     }
     else if (key === "s") {
-        frameRate(30);
+        frameRate(animationFrameRate);
         loop();
-        animation = net.solve(300);
+        animation = net.solveAnimation(animationTime);
     }
     else if (key == " " && net.isValid()) { // If space pressed and net untangled, go to the next.
         net = new Net(++N, mainCanvasWidth, mainCanvasHeight);
         fill(0);
         draw();
-    }
-    else {
-        print(`"${key}"`);
     }
 }
 
