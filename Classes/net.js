@@ -35,16 +35,17 @@ class Net {
              */
             let randomPoint = () => {
                 return new PointNode(
-                    Math.random() * availableSpace.x + this.startPos.y, 
-                    Math.random() * availableSpace.x + this.startPos.y
+                    Math.random() * availableSpace.x + this.startPos.x, 
+                    Math.random() * availableSpace.y + this.startPos.y
                 );
             }
 
             // let space = this.cellSize.x;
             const ATTEMPTS = 1000;
+            let tries = 1000;
             let attempt;
 
-            while(this.points.length < this.size) { // Create the points
+            while(this.points.length < this.size & tries-- > 0) { // Create the points
                 attempt = 0;
                 this.points.length = 0;
 
@@ -61,7 +62,12 @@ class Net {
                         this.points.push(newPoint);
                     }
                 }
-            }        
+
+                console.error("Failed");
+            }
+            if (tries < 0) {
+                throw new Error("Not able to generate the net :S");
+            }
 
             for (let i = 0; i < this.size; i++) {
                 let p1 = this.points[i];
@@ -125,8 +131,8 @@ class Net {
      * Shuffles the current net, placing all the points forming a circle.
      */
     tangleNet() {
-        let center = this.screenSize.x >> 1
-        let r = center - this.startPos.x;
+        let center = new Point(this.screenSize.x >> 1, this.screenSize.y >> 1);
+        let r = center.minus(this.startPos);
 
         let dTheta = Math.PI * 2 / this.size;
 
@@ -140,8 +146,8 @@ class Net {
             let ind = (Math.random() * indices.length) >> 0;
             let index = indices.splice(ind, 1)[0];
             
-            let x = r * Math.cos(dTheta * i) + center;
-            let y = r * Math.sin(dTheta * i) + center;
+            let x = r.x * Math.cos(dTheta * i) + center.x;
+            let y = r.y * Math.sin(dTheta * i) + center.y;
 
             this.points[index].moveTo(x, y);
             i++;

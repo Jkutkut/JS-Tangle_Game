@@ -1,5 +1,6 @@
 :root {
-    --background: rgb(110, 110, 110);
+    --background: rgb(0, 0, 0);
+    /* --background: rgb(255, 255, 255); */
 }
 
 body {

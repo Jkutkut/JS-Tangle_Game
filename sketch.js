@@ -1,4 +1,5 @@
-var mainCanvasSize;
+var mainCanvasWidth;
+var mainCanvasHeight;
 
 var N = 5;
 var net;
@@ -11,12 +12,13 @@ const animationFrameRate = 30;
  * Create the canvas and the net.
  */
 function setup() {
-    mainCanvasSize = Math.min(windowWidth, windowHeight);
+    mainCanvasWidth = windowWidth * 0.995;
+    mainCanvasHeight = windowHeight * 0.995;
     
-    createCanvas(mainCanvasSize, mainCanvasSize);
+    createCanvas(mainCanvasWidth, mainCanvasHeight);
     frameRate(30);
 
-    net = new Net(N, mainCanvasSize, mainCanvasSize);
+    net = new Net(N, mainCanvasWidth, mainCanvasHeight);
 
     fill(0);
     stroke(0);
@@ -58,7 +60,7 @@ function draw() {
 }
 
 function resetLevel() {
-    net = new Net(N, mainCanvasSize, mainCanvasSize);
+    net = new Net(N, mainCanvasWidth, mainCanvasHeight);
     fill(0);
     draw();
 }
