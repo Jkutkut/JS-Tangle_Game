@@ -110,6 +110,10 @@ function mousePressed() {
 }
   
 function mouseDragged() {
+    if (animation)  {
+        mouseReleased();
+    }
+
     if (pointDragged != null) {
         pointDragged.moveTo(mouseX, mouseY);
     }
@@ -118,6 +122,7 @@ function mouseDragged() {
 function mouseReleased() {
     pointDragged = null;
 
+    if (animation) return;
     checkIsValid();
     noLoop();
 }
