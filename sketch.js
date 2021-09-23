@@ -1,8 +1,11 @@
 var mainCanvasWidth, mainCanvasHeight;
 
-var N = 15;
-var net;
+var N = 5;
+var net, animation;
 
+/**
+ * Create the canvas and the net.
+ */
 function setup() {
     mainCanvasWidth = (mainCanvasWidth)? mainCanvasWidth : windowWidth;
     mainCanvasHeight = (mainCanvasHeight)? mainCanvasHeight : Math.min(mainCanvasWidth, windowHeight);
@@ -20,6 +23,9 @@ function setup() {
 }
 
 
+/**
+ * Clear the canvas, draw the lines and the points.
+ */
 function draw() {
     background(255);
 
@@ -38,21 +44,43 @@ function draw() {
         ellipse(...pointDragged.shape);
         pop();
     }
+
+    // if (animation) {
+    //     animation.next()
+    // }
 }
 
 function keyPressed() {
+    if (key === "r") { // If r pressed, reset the net
+        net.createNet();
+        net.tangleNet();
+        draw()
+    }
+    else if (key === "s") {
+        frameRate(30);
+        loop();
+        animation = net.solve(300);
+    }
+    else if (key == " " && net.isValid()) { // If space pressed and net untangled, go to the next.
+        net = new Net(++N, mainCanvasWidth, mainCanvasHeight);
+        fill(0);
+        draw();
+    }
+    else {
+        print(`"${key}"`);
+    }
 }
 
 
-pointDragged = null;
+pointDragged = null; // * When null, there's no point dragged. Else, the content is the point dragged.
 
 function mousePressed() {
     let mouse = new Point(mouseX, mouseY);
     for (let i = 0; i < net.points.length; i++) {
-        if (mouse.dist(net.points[i]) < Point.radius * 1.2) {
+        if (mouse.dist(net.points[i]) < Point.radius * 1.2) { // If mouse near point
             pointDragged = net.points[i];
             loop();
-            return;
+            return; // Stop looking
         }
     }
     pointDragged = null;

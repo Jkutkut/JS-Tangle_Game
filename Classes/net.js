@@ -14,7 +14,7 @@ class Net {
         this._lines = [];
 
         this.createNet();
-        // this.tangleNet();
+        this.tangleNet();
     }
 
 

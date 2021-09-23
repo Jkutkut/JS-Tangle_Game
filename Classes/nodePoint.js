@@ -1,6 +1,7 @@
 class PointNode extends Point {
     constructor(x, y) {
         super(x, y);
+        this.initialPos = new Point(x, y);
         this._connectedNodes = new Set();
     }
 
