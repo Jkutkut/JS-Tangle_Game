@@ -57,21 +57,40 @@ function draw() {
     }
 }
 
+function resetLevel() {
+    net = new Net(N, mainCanvasSize, mainCanvasSize);
+    fill(0);
+    draw();
+}
+
+function restartLevel() {
+    net.createNet();
+    net.tangleNet();
+    draw()
+}
+
 function keyPressed() {
     if (key === "r") { // If r pressed, reset the net
-        net.createNet();
-        net.tangleNet();
-        draw()
+        restartLevel();
     }
-    else if (key === "s") {
+    else if (key === "s") { // Solve
         frameRate(animationFrameRate);
         loop();
         animation = net.solveAnimation(animationTime);
     }
+    else if (key == "n") {
+        let newN = parseInt(prompt("How many points?", N), 10);
+        if (/^[0-9]+$/.test(newN)) { // If integer given
+            N = newN;
+            resetLevel();
+        }
+        else {
+            alert("Not valid! It must be an integer!")
+        }
+    }
     else if (key == " " && net.isValid()) { // If space pressed and net untangled, go to the next.
-        net = new Net(++N, mainCanvasWidth, mainCanvasHeight);
-        fill(0);
-        draw();
+        N++;
+        resetLevel();
     }
 }
 
