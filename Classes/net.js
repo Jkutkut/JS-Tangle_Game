@@ -20,6 +20,8 @@ class Net {
      * Creates the points and the lines.
      */
     createNet() {
+        let tries = 1000;
+
         do { // TODO Find a more efficient method to create the network
             // Reset variables
             this.points.length = 0;
@@ -42,10 +44,9 @@ class Net {
 
             // let space = this.cellSize.x;
             const ATTEMPTS = 1000;
-            let tries = 1000;
             let attempt;
 
-            while(this.points.length < this.size & tries-- > 0) { // Create the points
+            while(this.points.length < this.size) { // Create the points
                 attempt = 0;
                 this.points.length = 0;
 
@@ -62,12 +63,14 @@ class Net {
                         this.points.push(newPoint);
                     }
                 }
-
-                console.error("Failed");
+                
+                if (tries-- <= 0) {
+                    alert("Not able to generate the net :S");
+                    throw new Error("Not able to generate the net :S");
+                }
+                console.log("Failed layout");
             }
-            if (tries < 0) {
-                throw new Error("Not able to generate the net :S");
-            }
+            
 
             for (let i = 0; i < this.size; i++) {
                 let p1 = this.points[i];
