@@ -11,3 +11,10 @@ When the untangled, you won the game!
 ![Example of result](Res/img/solved.png)
 
 
+## Controls
+| Key | Effect |
+| :---: | --- |
+| **r** | Generate a new level with the current amount of points. |
+| **space** | If the current level is done, go to the next one. |
+| **n** | Change number of points. |
+| **s** | Solve the current level. |
