@@ -1,9 +1,10 @@
 class Net {
-    offset = 0.1;
+    borderOffset = 0.05;
+    groupOffset = 0.05;
 
     constructor(size, width, height) {
         this.screenSize = new Point(width, height);
-        this.startPos = this.screenSize.times(this.offset);
+        this.startPos = this.screenSize.times(this.borderOffset);
         
         this._size = size;
         this.spacing = (this.screenSize.x / this.size * 2) >> 0;
@@ -14,9 +15,12 @@ class Net {
         // this.createNet();
         // this.tangleNet();
         this.createNewNet();
+        // this.tangleNet();
     }
 
     createNewNet() {
+        this.points.length = 0;
+        // Create points
         let gridDim = Math.sqrt(this.size);
         if (gridDim % 1 > 0) { // If gridDim is decimal
             gridDim = parseInt(gridDim) + 1; // Remove the decimal and add another square.
@@ -24,19 +28,18 @@ class Net {
 
         let grid = matrix.make.zero(gridDim, gridDim); // Square matrix with the available spaces
         let gridSize = new Point(
-            parseInt(this.screenSize.x / gridDim) - 2 * this.startPos.x,
-            parseInt(this.screenSize.y / gridDim) - 2 * this.startPos.y
+            parseInt((this.screenSize.x - 2 * this.startPos.x) / gridDim) ,
+            parseInt((this.screenSize.y - 2 * this.startPos.y) / gridDim)
         );
         
         let randomCoord = (x) => {
             return parseInt(x * Math.random());
         };
         let randomPos = (x, y) => {
-            const offSetPos = 0.8;
-            const halfOffSetPos = offSetPos >> 1;
+            const extraSize = 1 - 2 * this.groupOffset;
             return [
-                this.startPos.x + (x + Math.random() * offSetPos - halfOffSetPos) * gridSize.x,
-                this.startPos.y + (y + Math.random() * offSetPos - halfOffSetPos) * gridSize.y
+                this.startPos.x + (x + this.groupOffset + (Math.random() * extraSize)) * gridSize.x,
+                this.startPos.y + (y + this.groupOffset + (Math.random() * extraSize)) * gridSize.y
             ];
         }
 
@@ -49,11 +52,59 @@ class Net {
                 this.points.push(new PointNode(...randomPos(x, y)));
             }
         }
-        
-        // do {
 
-        // } while (false)
-        // } while(!this.isValid() || !this.isFullyConnected());
+        // Create lines
+        this.lines.length = 0;
+        for (let i = 0; i < this.size; i++) {
+            let p1 = this.points[i];
+            const MAX = (Math.random() * 2 >> 0) + 2; // Number of connections to make at max
+
+            let closePoints = []; // The closest points to the current one (only store MAX)
+            closePoints.length = MAX;
+            for (let j = 0; j < this.size; j++) {
+                if (i == j) continue;
+
+                let p2 = this.points[j];
+                let dist = p1.dist(p2);
+
+                for (let k = 0; k < closePoints.length; k++) { // Attempt to insert p2 into the array
+                    if (!closePoints[k] || closePoints[k].dist > dist) {
+                        closePoints.splice(k, 0, {point: p2, dist: dist}); // Add it in position
+                        closePoints.length = MAX; // Remove extra elements
+                        break;
+                    }
+                }
+            }
+
+            // Make links
+            let pos1 = p1.pos;
+            for (let k = 0; k < MAX; k++) {
+                let valid = true;
+                let pos2 = closePoints[k].point.pos;
+                
+                for (let q = 0; q < this.lines.length; q++) {
+                    if (this.lines[q][0] == closePoints[k].point && this.lines[q][1] == p1) { // If already made this link
+                        valid = false;
+                        break;
+                    }
+
+                    let pos3 = this.lines[q][0].pos;
+                    let pos4 = this.lines[q][1].pos;
+
+                    if (SegmentCollision.intersection(...pos1, ...pos2, ...pos3, ...pos4)) {
+                        valid = false;
+                        break;
+                    }
+                    
+                }
+
+                if (valid) {
+                    this.lines.push([p1, closePoints[k].point]);
+                    p1.addConnection(closePoints[k].point);
+                    closePoints[k].point.addConnection(p1);
+                }
+            }
+        }
     }
 
     /**
