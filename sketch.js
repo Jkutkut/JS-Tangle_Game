@@ -60,7 +60,8 @@ function draw() {
 }
 
 function resetLevel() {
-    net = new Net(N, mainCanvasWidth, mainCanvasHeight);
+    let dTs = net.defaultTangleStyle;
+    net = new Net(N, mainCanvasWidth, mainCanvasHeight, dTs);
     fill(0);
     draw();
 }
