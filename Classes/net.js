@@ -2,12 +2,24 @@ class Net {
     borderOffset = 0.06;
     groupOffset = 0.05;
 
+    // CONSTANTS
+    extraSize = 1 - 2 * this.groupOffset;
+
     constructor(size, width, height) {
         this.screenSize = new Point(width, height);
         this.startPos = this.screenSize.times(this.borderOffset);
         
         this._size = size;
-        this.spacing = (this.screenSize.x / this.size * 2) >> 0;
+        
+        this.gridDim = Math.sqrt(this.size);
+        if (this.gridDim % 1 > 0) { // If gridDim is decimal
+            this.gridDim = parseInt(this.gridDim) + 1; // Remove the decimal and add another square.
+        }
+
+        this.gridSize = new Point(
+            parseInt((this.screenSize.x - 2 * this.startPos.x) / this.gridDim) ,
+            parseInt((this.screenSize.y - 2 * this.startPos.y) / this.gridDim)
+        );
         
         this._points = [];
         this._lines = [];
@@ -16,39 +28,28 @@ class Net {
         this.tangleNet();
     }
 
+    /**
+     * Creates the net with the points and the lines.
+     * @see this.points
+     * @see this.lines
+     */
     createNet() {
         // Create points
         this.points.length = 0;
 
-        let gridDim = Math.sqrt(this.size);
-        if (gridDim % 1 > 0) { // If gridDim is decimal
-            gridDim = parseInt(gridDim) + 1; // Remove the decimal and add another square.
-        }
-
-        let grid = matrix.make.zero(gridDim, gridDim); // Square matrix with the available spaces
-        let gridSize = new Point(
-            parseInt((this.screenSize.x - 2 * this.startPos.x) / gridDim) ,
-            parseInt((this.screenSize.y - 2 * this.startPos.y) / gridDim)
-        );
+        let grid = matrix.make.zero(this.gridDim, this.gridDim); // Square matrix with the available spaces
         
         let randomCoord = (x) => {
             return parseInt(x * Math.random());
         };
-        let randomPos = (x, y) => {
-            const extraSize = 1 - 2 * this.groupOffset;
-            return [
-                this.startPos.x + (x + this.groupOffset + (Math.random() * extraSize)) * gridSize.x,
-                this.startPos.y + (y + this.groupOffset + (Math.random() * extraSize)) * gridSize.y
-            ];
-        }
 
         while (this.points.length < this.size) {
-            let x = randomCoord(gridDim);
-            let y = randomCoord(gridDim);
+            let x = randomCoord(this.gridDim);
+            let y = randomCoord(this.gridDim);
 
             if (grid[x][y] == 0) { // If space available
                 grid[x][y] = 1;
-                this.points.push(new PointNode(...randomPos(x, y)));
+                this.points.push(new PointNode(...this.randomPos(x, y)));
             }
         }
 
@@ -104,6 +105,18 @@ class Net {
                 }
             }
         }
+    }
+
+    /**
+     * @param {int} x - Horizontal index.
+     * @param {int} y - Vertical index.
+     * @returns Array with a random coordinate on the square with the indexes given.
+     */
+    randomPos = (x, y) => {
+        return [
+            this.startPos.x + (x + this.groupOffset + (Math.random() * this.extraSize)) * this.gridSize.x,
+            this.startPos.y + (y + this.groupOffset + (Math.random() * this.extraSize)) * this.gridSize.y
+        ];
     }
 
     // GETTERS
