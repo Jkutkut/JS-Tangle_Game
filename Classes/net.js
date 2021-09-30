@@ -1,5 +1,5 @@
 class Net {
-    borderOffset = 0.05;
+    borderOffset = 0.06;
     groupOffset = 0.05;
 
     constructor(size, width, height) {
@@ -12,15 +12,14 @@ class Net {
         this._points = [];
         this._lines = [];
 
-        // this.createNet();
-        // this.tangleNet();
-        this.createNewNet();
-        // this.tangleNet();
+        this.createNet();
+        this.tangleNet();
     }
 
-    createNewNet() {
-        this.points.length = 0;
+    createNet() {
         // Create points
+        this.points.length = 0;
+
         let gridDim = Math.sqrt(this.size);
         if (gridDim % 1 > 0) { // If gridDim is decimal
             gridDim = parseInt(gridDim) + 1; // Remove the decimal and add another square.
@@ -105,101 +104,6 @@ class Net {
                 }
             }
         }
-    }
-
-    /**
-     * Creates the points and the lines.
-     */
-    createNet() {
-        do { // TODO Find a more efficient method to create the network
-            // Reset variables
-            this.points.length = 0;
-            this.lines.length = 0;
-
-
-            let availableSpace = new Point(
-                this.screenSize.x - 2 * this.startPos.x,
-                this.screenSize.y - 2 * this.startPos.y
-            );
-            /**
-             * @returns a random point inside the screen
-             */
-            let randomPoint = () => {
-                return new PointNode(
-                    Math.random() * availableSpace.x + this.startPos.x, 
-                    Math.random() * availableSpace.y + this.startPos.y
-                );
-            }
-
-            const ATTEMPTS = 1000;
-            let attempt;
-            let tries = 1000;
-
-            while(this.points.length < this.size) { // Create the points
-                attempt = 0;
-                this.points.length = 0;
-
-                while (this.points.length < this.size && attempt++ < ATTEMPTS) {
-                    let newPoint = randomPoint();
-                    let valid = true;
-                    for (let i = 0; i < this.points.length; i++) {
-                        if (newPoint.dist(this.points[i]) < this.spacing) {
-                            valid = false;
-                            break;
-                        }
-                    }
-                    if (valid) {
-                        this.points.push(newPoint);
-                    }
-                }
-                
-                if (tries-- <= 0) {
-                    alert("Not able to generate the net :S");
-                    throw new Error("Not able to generate the net :S");
-                }
-                console.log("Failed layout");
-            }
-            
-
-            for (let i = 0; i < this.size; i++) {
-                let p1 = this.points[i];
-                const MAX = (Math.random() * 2 >> 0) + 2;
-
-
-                let closePoints = []; // This array will have the length = max
-                closePoints.length = MAX;
-                for (let j = 0; j < this.size; j++) {
-                    if (i == j) continue;
-
-                    let p2 = this.points[j];
-                    let dist = p1.dist(p2);
-
-                    for (let k = 0; k < closePoints.length; k++) { // Attempt to insert p2 into the array
-                        if (!closePoints[k] || closePoints[k].dist > dist) {
-                            closePoints.splice(k, 0, {point: p2, dist: dist});
-                            closePoints.length = MAX;
-                            break;
-                        }
-                    }
-                }
-
-                for (let k = 0; k < closePoints.length; k++) {
-                    let alreadyMade = false;
-                    for (let q = 0; q < this.lines.length; q++) {// Check not already in
-                        if (this.lines[q][0] == closePoints[k].point && this.lines[q][1] == p1) {
-                            alreadyMade = true;
-                            break;
-                        }
-                    }
-
-                    if (!alreadyMade) {
-                        this.lines.push([p1, closePoints[k].point]);
-                        p1.addConnection(closePoints[k].point);
-                        closePoints[k].point.addConnection(p1);
-                    }
-                }
-            }
-        } while(!this.isValid() || !this.isFullyConnected());
     }
 
     // GETTERS
