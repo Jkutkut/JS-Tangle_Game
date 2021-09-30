@@ -31,8 +31,8 @@ class Net {
 
         this.createNet();
 
-        // this.tangleNet(this.tangleStyle.Normal);
-        this.tangleNet(this.tangleStyles.Classic);
+        this.tangleNet(this.tangleStyles.Normal);
+        // this.tangleNet(this.tangleStyles.Classic);
     }
 
     /**
@@ -52,7 +52,7 @@ class Net {
 
             if (grid[x][y] == 0) { // If space available
                 grid[x][y] = 1;
-                this.points.push(new PointNode(...this.randomPos(x, y)));
+                this.points.push(new PointNode(...this.randomPos(x, y).pos));
             }
         }
 
@@ -137,10 +137,10 @@ class Net {
      * @returns Array with a random coordinate on the square with the indexes given.
      */
      randomPos = (x, y) => {
-        return [
+        return new Point(
             this.startPos.x + (x + this.groupOffset + (Math.random() * this.extraSize)) * this.gridSize.x,
             this.startPos.y + (y + this.groupOffset + (Math.random() * this.extraSize)) * this.gridSize.y
-        ];
+        );
     }
 
     // SETTERS
@@ -154,13 +154,17 @@ class Net {
      */
     tangleNet(type) {
         switch (type) {
-            case this.tangleStyles.Classic:
+            case this.tangleStyles.Normal:
                 let grid = matrix.make.zero(this.gridDim, this.gridDim); // Square matrix with the available spaces
 
-                for (let i = 0, x, y; i < this.points.length; i++) {
-                    x = i % this.gridDim;
-                    y = (i / this.gridDim) >> 0;
-                    console.log([x, y]);
+                for (let i = 0, x, y; i < this.points.length; i) {
+                    x = this.randomCoord();
+                    y = this.randomCoord();
+
+                    if ( grid[x][y] == 0 ) { // If point not there yet
+                        grid[x][y] = 1;
+                        this.points[i++].moveTo(...this.randomPos(x, y).pos);
+                    }
                 }
                 break;
             
