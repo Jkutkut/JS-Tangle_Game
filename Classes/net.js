@@ -56,7 +56,7 @@ class Net {
         this.lines.length = 0;
         for (let i = 0; i < this.size; i++) {
             let p1 = this.points[i];
-            const MAX = (Math.random() * 2 >> 0) + 2; // Number of connections to make at max
+            const MAX = (Math.random() * 3 >> 0) + 2; // Number of connections to make at max
 
             let closePoints = []; // The closest points to the current one (only store MAX)
             closePoints.length = MAX;
