@@ -81,7 +81,7 @@ function keyPressed() {
         loop();
         animation = net.solveAnimation(animationTime);
     }
-    else if (key == "n") {
+    else if (key === "n") {
         let newN = parseInt(prompt("How many points?", N), 10);
         if (/^[0-9]+$/.test(newN)) { // If integer given
             N = newN;
@@ -91,7 +91,20 @@ function keyPressed() {
             alert("Not valid! It must be an integer!")
         }
     }
-    else if (key == " " && net.isValid()) { // If space pressed and net untangled, go to the next.
+    else if (key === "t") {
+        let question = "Which style do you want?";
+        for (let t of Object.keys(net.tangleStyles)) {
+            question += `\n- ${t}`;
+        }
+
+        let answer = prompt(question, "Normal");
+        if (answer === null || net.tangleStyles[answer] === undefined) return; // If cancel pressed, stop
+        
+        net.defaultTangleStyle = net.tangleStyles[answer];
+        net.tangleNet();
+        draw();
+    }
+    else if (key === " " && net.isValid()) { // If space pressed and net untangled, go to the next.
         N++;
         resetLevel();
     }

@@ -18,3 +18,4 @@ When the untangled, you won the game!
 | **space** | If the current level is done, go to the next one. |
 | **n** | Change number of points. |
 | **s** | Solve the current level. |
+| **t** | Tangle the net using a different style. |
