@@ -1,15 +1,14 @@
 class Net {
-    // VARIABLES
+    
+    // CONSTANTS and VARIABLES
     borderOffset = 0.06;
     groupOffset = 0.05;
-    defaultTangleStyle = this.tangleStyles.Normal;
-
-    // CONSTANTS
     extraSize = 1 - 2 * this.groupOffset;
     tangleStyles = {
         "Normal": 0, // Placing the points on all the screen
         "Classic": 1 // Placing the points on a circle.
     }
+    defaultTangleStyle = this.tangleStyles.Normal;
 
     constructor(size, width, height, tangleStyle=undefined) {
         this.screenSize = new Point(width, height);
