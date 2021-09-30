@@ -6,6 +6,7 @@ class Net {
         "Normal": 0, // Placing the points on all the screen
         "Classic": 1 // Placing the points on a circle.
     }
+    defaultTangleStyle = this.tangleStyles.Normal;
 
     // CONSTANTS
     extraSize = 1 - 2 * this.groupOffset;
@@ -31,8 +32,7 @@ class Net {
 
         this.createNet();
 
-        this.tangleNet(this.tangleStyles.Normal);
-        // this.tangleNet(this.tangleStyles.Classic);
+        this.tangleNet();
     }
 
     /**
@@ -152,7 +152,7 @@ class Net {
      * @param type [int] - Type of tangle style
      * @see this.tangleStyle to see all the available styles.
      */
-    tangleNet(type) {
+    tangleNet(type=this.defaultTangleStyle) {
         switch (type) {
             case this.tangleStyles.Normal:
                 let grid = matrix.make.zero(this.gridDim, this.gridDim); // Square matrix with the available spaces
