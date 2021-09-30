@@ -2,6 +2,11 @@ class Net {
     borderOffset = 0.06;
     groupOffset = 0.05;
 
+    tangleStyles = {
+        "Normal": 0, // Placing the points on all the screen
+        "Classic": 1 // Placing the points on a circle.
+    }
+
     // CONSTANTS
     extraSize = 1 - 2 * this.groupOffset;
 
@@ -25,7 +30,9 @@ class Net {
         this._lines = [];
 
         this.createNet();
-        this.tangleNet();
+
+        // this.tangleNet(this.tangleStyle.Normal);
+        this.tangleNet(this.tangleStyles.Classic);
     }
 
     /**
@@ -38,14 +45,10 @@ class Net {
         this.points.length = 0;
 
         let grid = matrix.make.zero(this.gridDim, this.gridDim); // Square matrix with the available spaces
-        
-        let randomCoord = (x) => {
-            return parseInt(x * Math.random());
-        };
 
         while (this.points.length < this.size) {
-            let x = randomCoord(this.gridDim);
-            let y = randomCoord(this.gridDim);
+            let x = this.randomCoord();
+            let y = this.randomCoord();
 
             if (grid[x][y] == 0) { // If space available
                 grid[x][y] = 1;
@@ -107,18 +110,6 @@ class Net {
         }
     }
 
-    /**
-     * @param {int} x - Horizontal index.
-     * @param {int} y - Vertical index.
-     * @returns Array with a random coordinate on the square with the indexes given.
-     */
-    randomPos = (x, y) => {
-        return [
-            this.startPos.x + (x + this.groupOffset + (Math.random() * this.extraSize)) * this.gridSize.x,
-            this.startPos.y + (y + this.groupOffset + (Math.random() * this.extraSize)) * this.gridSize.y
-        ];
-    }
-
     // GETTERS
     get size() {
         return this._size;
@@ -132,34 +123,74 @@ class Net {
         return this._lines;
     }
 
+    /**
+     * @returns Random index for a coordinate.
+     * @see this.gridDim
+     */
+    randomCoord () {
+        return (this.gridDim * Math.random()) >>> 0;
+    };
+
+    /**
+     * @param {int} x - Horizontal index.
+     * @param {int} y - Vertical index.
+     * @returns Array with a random coordinate on the square with the indexes given.
+     */
+     randomPos = (x, y) => {
+        return [
+            this.startPos.x + (x + this.groupOffset + (Math.random() * this.extraSize)) * this.gridSize.x,
+            this.startPos.y + (y + this.groupOffset + (Math.random() * this.extraSize)) * this.gridSize.y
+        ];
+    }
+
     // SETTERS
 
     // Tangle logic
 
     /**
      * Shuffles the current net, placing all the points forming a circle.
+     * @param type [int] - Type of tangle style
+     * @see this.tangleStyle to see all the available styles.
      */
-    tangleNet() {
-        let center = new Point(this.screenSize.x >> 1, this.screenSize.y >> 1);
-        let r = center.minus(this.startPos);
+    tangleNet(type) {
+        switch (type) {
+            case this.tangleStyles.Classic:
+                let grid = matrix.make.zero(this.gridDim, this.gridDim); // Square matrix with the available spaces
 
-        let dTheta = Math.PI * 2 / this.size;
-
-        let indices = [];
-        for (let i = 0; i < this.size; i++) {
-            indices.push(i);
-        }
-
-        let i = 0;
-        while(indices.length > 0) {
-            let ind = (Math.random() * indices.length) >> 0;
-            let index = indices.splice(ind, 1)[0];
+                for (let i = 0, x, y; i < this.points.length; i++) {
+                    x = i % this.gridDim;
+                    y = (i / this.gridDim) >> 0;
+                    console.log([x, y]);
+                }
+                break;
             
-            let x = r.x * Math.cos(dTheta * i) + center.x;
-            let y = r.y * Math.sin(dTheta * i) + center.y;
+            case this.tangleStyles.Classic:
+                let center = new Point(this.screenSize.x >> 1, this.screenSize.y >> 1);
+                let r = center.minus(this.startPos);
+        
+                let dTheta = Math.PI * 2 / this.size;
+        
+                let indices = [];
+                for (let i = 0; i < this.size; i++) {
+                    indices.push(i);
+                }
+        
+                let i = 0;
+                while(indices.length > 0) {
+                    let ind = (Math.random() * indices.length) >> 0;
+                    let index = indices.splice(ind, 1)[0];
+                    
+                    let x = r.x * Math.cos(dTheta * i) + center.x;
+                    let y = r.y * Math.sin(dTheta * i) + center.y;
+        
+                    this.points[index].moveTo(x, y);
+                    i++;
+                }
+                break;
 
-            this.points[index].moveTo(x, y);
-            i++;
+            default:
+                throw new Error("Style not found");
+                break;
         }
     }
 
