@@ -20,8 +20,6 @@ class Net {
      * Creates the points and the lines.
      */
     createNet() {
-        let tries = 1000;
-
         do { // TODO Find a more efficient method to create the network
             // Reset variables
             this.points.length = 0;
@@ -42,9 +40,9 @@ class Net {
                 );
             }
 
-            // let space = this.cellSize.x;
             const ATTEMPTS = 1000;
             let attempt;
+            let tries = 1000;
 
             while(this.points.length < this.size) { // Create the points
                 attempt = 0;
