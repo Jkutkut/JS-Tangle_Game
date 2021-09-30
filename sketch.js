@@ -68,6 +68,7 @@ function resetLevel() {
 function restartLevel() {
     net.createNet();
     net.tangleNet();
+    fill(0);
     draw()
 }
 
