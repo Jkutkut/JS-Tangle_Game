@@ -11,10 +11,50 @@ class Net {
         this._points = [];
         this._lines = [];
 
-        this.createNet();
-        this.tangleNet();
+        // this.createNet();
+        // this.tangleNet();
+        this.createNewNet();
     }
 
+    createNewNet() {
+        let gridDim = Math.sqrt(this.size);
+        if (gridDim % 1 > 0) { // If gridDim is decimal
+            gridDim = parseInt(gridDim) + 1; // Remove the decimal and add another square.
+        }
+
+        let grid = matrix.make.zero(gridDim, gridDim); // Square matrix with the available spaces
+        let gridSize = new Point(
+            parseInt(this.screenSize.x / gridDim) - 2 * this.startPos.x,
+            parseInt(this.screenSize.y / gridDim) - 2 * this.startPos.y
+        );
+        
+        let randomCoord = (x) => {
+            return parseInt(x * Math.random());
+        };
+        let randomPos = (x, y) => {
+            const offSetPos = 0.8;
+            const halfOffSetPos = offSetPos >> 1;
+            return [
+                this.startPos.x + (x + Math.random() * offSetPos - halfOffSetPos) * gridSize.x,
+                this.startPos.y + (y + Math.random() * offSetPos - halfOffSetPos) * gridSize.y
+            ];
+        }
+
+        while (this.points.length < this.size) {
+            let x = randomCoord(gridDim);
+            let y = randomCoord(gridDim);
+
+            if (grid[x][y] == 0) { // If space available
+                grid[x][y] = 1;
+                this.points.push(new PointNode(...randomPos(x, y)));
+            }
+        }
+        
+        // do {
+
+        // } while (false)
+        // } while(!this.isValid() || !this.isFullyConnected());
+    }
 
     /**
      * Creates the points and the lines.
